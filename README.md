@@ -1,70 +1,86 @@
-# Getting Started with Create React App
+## Paper, Rock and Scissors
+<img src="https://github.com/Qiugu-He/20-React-App/blob/master/04-Paper_Rock_Scissors/game.png" alt="alt text" width="100%" height="100%">
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This small app let me practiced with *react hook: useState, useEffet*
 
-## Available Scripts
+### States:
+```JavaScript
+    const [wins, setWins] = useState(0);
+    const [losses, setLosses] = useState(0);
+    const [gameState, setGameState] = useState(null); // win, lose, draw
 
-In the project directory, you can run:
+    const [userChoice, setUserChoice] = useState(null);
+    const [computerChoice, setComputerChoice] = useState(null);
+```
 
-### `npm start`
+### Rendering flow:
+-> App.js<Br>
+-----> Render Component: Rock, Paper, Scissor. 
+```JavaScript
+        <div>
+            <button className="rock" onClick={() => handleUserChoice(1)}>
+                <Rock />
+            </button>
+            <button className="paper" onClick={() => handleUserChoice(2)}>
+                <Paper />
+            </button>
+            <button className="scissors" onClick={() => handleUserChoice(3)}>
+                <Scissors />
+            </button>
+        </div>
+```
+-----> Change States: handlerUserChoices()
+```JavaScript
+    //get the user's choice and set it to state
+    function handleUserChoice(choice){
+        const chosenChoice = choices.find(c => c.id === choice);
+        setUserChoice(chosenChoice);
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+        //determin the winer
+        if (chosenChoice.losesTo === computerChoice.id) {
+        // lose
+        /*
+            Here, dont using setLooses(losses + 1), instead using function way:  setLosses(losses => losses + 1);
+            Because we need to track the previous one
+        */
+        setLosses(losses => losses + 1);
+        setGameState('lose');
+        } else if (computerChoice.losesTo === chosenChoice.id) {
+        // win
+        setWins(wins => wins + 1);
+        setGameState('win');
+        } else if (computerChoice.id === chosenChoice.id) {
+        // draw
+        setGameState('draw');
+        }
+    }
+```
+-----> Pop to show win/loss/draw based on state:
+```JavaScript
+      {gameState && (
+        <div
+          className={`game-state ${gameState}`}
+          onClick={() => restartGame()}
+        >
+        <div>
+          <div className="game-state-content">
+            <p>{renderComponent(userChoice)}</p>
+            {/* <p>you {gameState}!</p> */}
+            {gameState === 'win' && <p>Congrats! You won!</p>}
+            {gameState === 'lose' && <p>Sorry! You lost!</p>}
+            {gameState === 'draw' && <p>You drew!</p>}
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+            <p>{renderComponent(computerChoice)}</p>
+          </div>
 
-### `npm test`
+          <button>Play Again</button>
+        </div>
+      </div>
+      )}
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## How to Run :
+- npm install<br>
+- npm run
+- npm build (For production)
